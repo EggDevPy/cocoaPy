@@ -20,8 +20,12 @@ class MyCog(commands.Cog, app_commands.Group, name="parent"):
         """ /parent sub-2 """
         await interaction.response.send_message("Hello from sub command 2", ephemeral=True)
 
+    @app_commands.command(name="ping") #apparently these names need to be lower case
+    async def ping_pong(self, interaction: discord.Interaction) -> None:
+        await interaction.response.send_message(f"You've been Ponged: `{self.bot.latency * 1000:.2f}ms`")
+
 
 async def setup(bot: commands.Bot) -> None:
-    #await bot.add_cog(MyCog(bot))
+    # await bot.add_cog(MyCog(bot))
     # or if you want guild/guilds only...
     await bot.add_cog(MyCog(bot), guilds=[discord.Object(id=886621065554575410)])
