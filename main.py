@@ -1,6 +1,8 @@
+import time
+
 import discord
 from discord import app_commands
-from discord.ext import commands, tasks
+
 
 from utils.config import token
 
@@ -12,9 +14,9 @@ client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
 '''
-3.20.2022 | 12:54am | Charlotte -
-The bot runs, but is unresponsive. Nothing prints to the console, 
-and it appears I've not linked application commands.
+3.20.2022 | 11:33am | Charlotte -
+The bot runs, and now prints to the console.
+No commands seem to have registered.
 
 Documentation available:
 https://discordpy.readthedocs.io/en/latest/index.html#getting-started
@@ -28,26 +30,31 @@ https://discordpy.readthedocs.io/en/master/migrating.html#python-version-change
 and the discord.py server.
 
 '''
+BOTENV_ID = 886621065554575410
 
 
-class MyClient(discord.Client):
-    async def on_ready(self):
-        """None of these events work, seemingly."""
-        print(f"Sync'd all application commands @%H:%M:%S\n"
-              f"%m/%d/%Y\n"
-              f"-----")
-        print(f'Logged in as {client.user}')
-        print('-----')
-        await tree.sync()
+@client.event
+async def on_ready():
+    await client.wait_until_ready()
+    await tree.sync()
+
+    print(time.strftime("Sync'd all application commands  @%H:%M:%S\n"
+                        f"%m/%d/%Y\n"
+                        f"-----"))
+    print(f'Logged in as {client.user}')
+    print('-----')
 
 
+async def setup_hook() -> None:
+    await tree.sync()
 
-    async def on_member_join(self, member):
-        """Im not even sure this would work"""
-        guild = member.guild
-        if guild.system_channel is not None:
-            to_send = f'Welcome {member.mention} to {guild.name}!'
-            await guild.system_channel.send(to_send)
+
+async def on_member_join(member):
+    """Im not even sure this would work"""
+    guild = member.guild
+    if guild.system_channel is not None:
+        to_send = f'Welcome {member.mention} to {guild.name}!'
+        await guild.system_channel.send(to_send)
 
 
 client.run(token,

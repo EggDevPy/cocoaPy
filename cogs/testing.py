@@ -3,8 +3,8 @@ from discord.ext import commands
 from discord import app_commands
 
 
-class Test(commands.Cog):
-    def __init__(self, bot: commands.Bot) -> None:
+class Test(app_commands.Group):
+    def __init__(self, bot):
         self.bot = bot
 
     group = app_commands.Group(name="Parent",
@@ -21,5 +21,5 @@ class Test(commands.Cog):
         await interaction.response.send_message("Test subs", ephemeral=True)
 
 
-async def setup(bot: commands.Bot)->None:
+async def setup(bot):
     await bot.add_cog(Test(bot))
