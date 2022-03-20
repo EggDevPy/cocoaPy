@@ -21,7 +21,17 @@ Info for that included in #4 commit, as well as file comments.
 
 - Added activity presence on ln 53
 
+- Added the prefix/mention stuff I wanted to
+(def get_prefix), ln. 30->34, and ln. 66
+
 '''
+
+
+def get_prefix(bot, message):
+    prefixes = [';;']
+    if not message.guild:
+        return ['?']
+    return commands.when_mentioned_or(*prefixes)(bot, message)
 
 
 class MyBot(commands.Bot):
@@ -53,7 +63,7 @@ class MyBot(commands.Bot):
 
 async def main():
     bot = MyBot(
-        command_prefix=";;",
+        command_prefix=get_prefix,
         intents=discord.Intents(
             presences=True,
             members=True,
