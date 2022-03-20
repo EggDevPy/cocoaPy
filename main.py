@@ -13,20 +13,13 @@ client = discord.Client(intents=Intents)
 tree = app_commands.CommandTree(client)
 
 '''
-3.20.2022 | 11:33am | Charlotte -
-The bot runs, and now prints to the console.
-No commands seem to have registered.
+3.20.2022 | 4:41pm | Charlotte #4 -
+~~~~~~~~
 
-Documentation available:
-https://discordpy.readthedocs.io/en/latest/index.html#getting-started
+- Commands Registered, I have added a loading.py file.
+Info for that included in #4 commit, as well as file comments.
 
-https://gist.github.com/Rapptz/c4324f17a80c94776832430007ad40e6
-
-https://github.com/Rapptz/discord.py/tree/master/examples
-
-https://discordpy.readthedocs.io/en/master/migrating.html#python-version-change
-
-and the discord.py server.
+- Added activity presence on ln 53
 
 '''
 
@@ -36,16 +29,20 @@ class MyBot(commands.Bot):
         super().__init__(*args, **kwargs)
         self.owner_id = 384459643545583627
         self.init_ext = [
-            'cogs.testing'
+            'cogs.testing',
+            'cogs.loading'
         ]
 
     async def on_ready(self):
+        print('^^ Extensions/App Commands ^^\n')
         print(time.strftime("Sync'd all application commands\n@ %H:%M:%S\n"
                             f"%m/%d/%Y\n"
                             f"-----"))
-        print(f'Logged in as {client.user}')
+        print(f'Logged in as {self.user}')
         print('-----')
         await self.tree.sync(guild=discord.Object(886621065554575410))
+        await self.change_presence(status=discord.Status.online,
+                                   activity=discord.Game('with code'))
 
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()

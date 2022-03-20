@@ -20,9 +20,9 @@ class MyCog(commands.Cog, app_commands.Group, name="parent"):
         """ /parent sub-2 """
         await interaction.response.send_message("Hello from sub command 2", ephemeral=True)
 
-    @app_commands.command(name="ping") #apparently these names need to be lower case
+    @app_commands.command(name="pinging")  # apparently these names need to be lower case
     async def ping_pong(self, interaction: discord.Interaction) -> None:
-        await interaction.response.send_message(f"You've been Ponged: `{self.bot.latency * 1000:.2f}ms`")
+        await interaction.response.send_message(f"You've been Pinged back!: `{self.bot.latency * 1000:.2f}ms`")
 
 
 async def setup(bot: commands.Bot) -> None:
