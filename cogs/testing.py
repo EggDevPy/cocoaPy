@@ -1,25 +1,27 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
+from utils.config import BOTENV_ID
 
 
-class Test(app_commands.Group):
-    def __init__(self, bot):
+class MyCog(commands.Cog, app_commands.Group, name="parent"):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        super().__init__()  # this is now required in this context.
 
-    group = app_commands.Group(name="Parent",
-                               description="...")
+    @app_commands.command(name="sub-1")
+    @app_commands.guilds(886621065554575410)
+    async def my_sub_command_1(self, interaction: discord.Interaction) -> None:
+        """ /parent sub-1 """
+        await interaction.response.send_message("Hello from sub command 1", ephemeral=True)
 
-    # @app_commands.guild() will define specific guild commands, etc, currently this is a global - which is nice.
-    @app_commands.command(name="Top-Command")
-    async def top_test(self, interaction: discord.Interaction) -> None:
-        await interaction.response.send_message('tested', ephemeral=True)
-
-    @group.command(name="sub-command")  # we use the declared group to make a command.
-    async def sub_test(self, interaction: discord.Interaction) -> None:
-        """ /parent sub-command """
-        await interaction.response.send_message("Test subs", ephemeral=True)
+    @app_commands.command(name="sub-2")
+    async def my_sub_command_2(self, interaction: discord.Interaction) -> None:
+        """ /parent sub-2 """
+        await interaction.response.send_message("Hello from sub command 2", ephemeral=True)
 
 
-async def setup(bot):
-    await bot.add_cog(Test(bot))
+async def setup(bot: commands.Bot) -> None:
+    #await bot.add_cog(MyCog(bot))
+    # or if you want guild/guilds only...
+    await bot.add_cog(MyCog(bot), guilds=[discord.Object(id=886621065554575410)])
