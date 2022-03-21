@@ -26,6 +26,8 @@ Info for that included in #4 commit, as well as file comments.
 
 - Fixed Welcome message ln. 65
 
+- Added misc.py file (holds invite code)
+
 '''
 
 
@@ -42,7 +44,9 @@ class MyBot(commands.Bot):
         self.owner_id = 384459643545583627
         self.init_ext = [
             'cogs.testing',
-            'cogs.loading'
+            'cogs.loading',
+            'cogs.misc',
+            'jishaku'
         ]
 
     async def on_ready(self):

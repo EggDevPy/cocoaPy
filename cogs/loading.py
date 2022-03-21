@@ -58,7 +58,7 @@ class Loader(commands.Cog, app_commands.Group, name="cogs"):
             await interaction.response.send_message(f"**`SUCCESS`**")
 
     @app_commands.command(name="reload-cog")
-    async def cog_reload(self, interaction: discord.Interaction, cog: str):
+    async def cogreload(self, interaction: discord.Interaction, cog: str):
         try:
             await self.bot.reload_extension(cog)
         except Exception as e:
