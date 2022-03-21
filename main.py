@@ -13,12 +13,16 @@ client = discord.Client(intents=Intents)
 tree = app_commands.CommandTree(client)
 
 '''
-3.21.2022 | 3:52pm | Charlotte -
+3.21.2022 | 5:57pm | Charlotte -
 ~~~~~~~~
 
 - Invite code changed to app_command (slash)
 
-- Added presence change command (app_command, slash) 
+- Added presence change command (app_command, slash)
+
+- Modal additon
+
+- Code cleanup 
 
 '''
 

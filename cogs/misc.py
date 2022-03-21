@@ -1,11 +1,55 @@
-from typing import List, Literal
+import traceback
+from typing import Literal
 
 import discord
 from discord import app_commands, Embed, AppInfo, Permissions
-from discord.app_commands import Choice
 from discord.ext import commands
-from discord.ext.commands import bot_has_permissions, Context
 from discord.utils import oauth_url
+
+
+class Feedback(discord.ui.Modal, title='Feeback'):
+    """Text inputs declare fields for text input"""
+    """https://discordpy.readthedocs.io/en/master/interactions/api.html#modal"""
+
+    name = discord.ui.TextInput(
+        label='Username',
+        placeholder="Discord username here",
+
+    )
+    mail = discord.ui.TextInput(
+        label='Email',
+        placeholder="Enter your email here",
+        required=False
+    )
+    feedback = discord.ui.TextInput(
+        label="Feeback / Suggestions on Cocoa?",
+        style=discord.TextStyle.long,
+        placeholder='Type message here',
+        required=False,
+        max_length=300,
+    )
+
+    async def on_submit(self, interaction: discord.Interaction):
+        """submission button"""
+        channel = interaction.guild.get_channel(955127273692995584) # I coded it so that it will send to a channel
+        await interaction.response.send_message(f'Thanks for your feedback, {self.name.value}!', ephemeral=True) # Invisible TY message
+
+        await channel.send(content=f"{interaction.user.mention}\n"
+                                   f"{self.name.value}\n"
+                                   f"{self.mail.value}\n"
+                                   f"{self.feedback.value}"
+                           )
+        """
+        These are the stored values from the feedback modal,
+        being returned to a channel. We can definitely modify
+        this to store values to a database with ease.
+        """
+
+    async def on_error(self, error: Exception, interaction: discord.Interaction) -> None:
+        """Simple error catch with traceback"""
+        await interaction.response.send_message('Oops! Something went wrong.', ephemeral=True)
+
+        traceback.print_tb(error.__traceback__)
 
 
 class Miscellaneous(commands.Cog, app_commands.Group, name="server"):
@@ -52,6 +96,11 @@ class Miscellaneous(commands.Cog, app_commands.Group, name="server"):
             await self.bot.change_presence(status=discord.Status(status),
                                            activity=discord.Game(f"{modified}"))
             await interaction.response.send_message(f"Status changed to {activity} ", ephemeral=True)
+
+    @app_commands.command()
+    async def feedback(self, interaction: discord.Interaction):
+        """This is where the class object is actually called as a command."""
+        await interaction.response.send_modal(Feedback())
 
 
 async def setup(bot: commands.Bot) -> None:
