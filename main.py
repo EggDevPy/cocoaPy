@@ -6,14 +6,14 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils.config import token, BOTENV_ID
+from utils.config import token
 
 Intents = discord.Intents.all()
 client = discord.Client(intents=Intents)
 tree = app_commands.CommandTree(client)
 
 '''
-3.20.2022 | 4:41pm | Charlotte #4 -
+3.20.2022 | 8:32pm | Charlotte #5 -
 ~~~~~~~~
 
 - Commands Registered, I have added a loading.py file.
@@ -23,6 +23,8 @@ Info for that included in #4 commit, as well as file comments.
 
 - Added the prefix/mention stuff I wanted to
 (def get_prefix), ln. 30->34, and ln. 66
+
+- Fixed Welcome message ln. 65
 
 '''
 
@@ -60,6 +62,13 @@ class MyBot(commands.Bot):
             await self.load_extension(ext)
             print(ext)
 
+    async def on_member_join(self, member):
+        """This works on channels that are set to system messages - hence guild.system_channel"""
+        guild = member.guild
+        if guild.system_channel is not None:
+            to_send = f'Welcome to {guild.name}, {member.mention}!'
+            await guild.system_channel.send(to_send)
+
 
 async def main():
     bot = MyBot(
@@ -75,14 +84,6 @@ async def main():
     async with bot:
         await bot.start(token,
                         reconnect=True)
-
-
-async def on_member_join(member):
-    """Im not even sure this would work"""
-    guild = member.guild
-    if guild.system_channel is not None:
-        to_send = f'Welcome {member.mention} to {guild.name}!'
-        await guild.system_channel.send(to_send)
 
 
 if __name__ == '__main__':
