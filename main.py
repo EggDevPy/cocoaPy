@@ -13,20 +13,12 @@ client = discord.Client(intents=Intents)
 tree = app_commands.CommandTree(client)
 
 '''
-3.20.2022 | 8:32pm | Charlotte #5 -
+3.21.2022 | 3:52pm | Charlotte -
 ~~~~~~~~
 
-- Commands Registered, I have added a loading.py file.
-Info for that included in #4 commit, as well as file comments.
+- Invite code changed to app_command (slash)
 
-- Added activity presence on ln 53
-
-- Added the prefix/mention stuff I wanted to
-(def get_prefix), ln. 30->34, and ln. 66
-
-- Fixed Welcome message ln. 65
-
-- Added misc.py file (holds invite code)
+- Added presence change command (app_command, slash) 
 
 '''
 
