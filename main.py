@@ -22,7 +22,9 @@ tree = app_commands.CommandTree(client)
 
 - Modal additon
 
-- Code cleanup 
+- Code cleanup
+
+- Removed 'jishaku'
 
 '''
 
@@ -41,8 +43,7 @@ class MyBot(commands.Bot):
         self.init_ext = [
             'cogs.testing',
             'cogs.loading',
-            'cogs.misc',
-            'jishaku'
+            'cogs.misc'
         ]
 
     async def on_ready(self):
