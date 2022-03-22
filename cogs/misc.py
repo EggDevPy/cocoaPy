@@ -10,17 +10,16 @@ from discord.utils import oauth_url
 def format_date(dt):
     if dt is None:
         return 'N/A'
-    return f'{dt:%A %d, %B %Y • %I:%M %p}'
-
+    return f'{dt:%A %d, %B %Y}'
 
 
 class About(discord.ui.View):
     def __init__(self):
         super(About, self).__init__(timeout=None)
         self.value = None
-
         url = 'https://github.com/EggDevPy/cocoaPy'
         serverUrl = 'https://discord.gg/btBCpwQwsK'
+        oauth_url='https://discord.com/api/oauth2/authorize?client_id=954780459211046952&permissions=414464732225&scope=bot'
 
         # UI Buttons for the About command, doesn't appear I can actually color the links.
         self.add_item(discord.ui.Button(label='GitHub',
@@ -29,6 +28,8 @@ class About(discord.ui.View):
         self.add_item(discord.ui.Button(label='Help Server',
                                         url=serverUrl,
                                         style=discord.ButtonStyle.blurple))
+        self.add_item(discord.ui.Button(label='Invite me!',
+                                        url=oauth_url))
 
 
 class Feedback(discord.ui.Modal, title='Feeback'):
@@ -102,31 +103,20 @@ class Miscellaneous(commands.Cog, app_commands.Group, name="server"):
 
     @app_commands.command()
     async def about(self, interaction: discord.Interaction):
-        """I replaced the Invite app_command with this, it offers additional info as well as UI views"""
-        app_info: AppInfo = await self.bot.application_info()
-        permissions = Permissions()
-        permissions.update(
-            send_messages=True,
-            embed_links=True,
-            add_reactions=True,
-            manage_channels=True,
-            manage_webhooks=True,
-            manage_roles=True
-        )
+        """Info on Cocoa!"""
 
         em = Embed(title=f"About this bot...",
 
                    ).set_author(
-            name=f"Click here to invite {self.bot.user.name}!",
-            icon_url=self.bot.user.avatar.url,
-            url=f'{oauth_url(app_info.id, permissions=permissions)}'
+            name=f"This is {self.bot.user.name} bot!",
+            icon_url=self.bot.user.avatar.url
         ).set_footer(
             text="Authors: Max & Charlotte"
         )
-        em.add_field(name=f"{self.bot.user.name} was created",
-                     value=format_date(self.bot.user.created_at), inline=False)
+        em.add_field(name=f"{self.bot.user.name} was created on",
+                     value=format_date(self.bot.user.created_at), inline=True)
         em.add_field(name=f"{self.bot.user.name} watches over",
-                     value=f"{len(self.bot.guilds)} servers, and {len(self.bot.users)} members")
+                     value=f"{len(self.bot.guilds)} servers, and {len(self.bot.users)} members", inline=True)
         em.color = discord.Color.random()
         await interaction.response.send_message(embed=em, view=About())
 
