@@ -78,12 +78,12 @@ class Feedback(discord.ui.Modal, title='Feeback'):
         traceback.print_tb(error.__traceback__)
 
 
-class Miscellaneous(commands.Cog, app_commands.Group, name="server"):
+class Miscellaneous(commands.Cog, app_commands.Group, name="cocoa"):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         super().__init__()  # this is now required in this context.
 
-    @app_commands.command()
+    @app_commands.command(description="Change Cocoa's Discord status")
     async def status(self, interaction: discord.Interaction,
                      status: Literal['online',
                                      'idle',
@@ -96,7 +96,7 @@ class Miscellaneous(commands.Cog, app_commands.Group, name="server"):
                                            activity=discord.Game(f"{modified}"))
             await interaction.response.send_message(f"Status changed to {activity} ", ephemeral=True)
 
-    @app_commands.command()
+    @app_commands.command(description="Give feedback on Cocoa")
     async def feedback(self, interaction: discord.Interaction):
         """This is where the class object is actually called as a command."""
         await interaction.response.send_modal(Feedback())

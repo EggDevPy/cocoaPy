@@ -37,7 +37,8 @@ class MyBot(commands.Bot):
         self.init_ext = [
             'cogs.testing',
             'cogs.loading',
-            'cogs.misc'
+            'cogs.misc',
+            'cogs.server'
         ]
 
     async def on_ready(self):
