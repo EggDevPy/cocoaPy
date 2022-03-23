@@ -8,6 +8,15 @@ from discord.ext import commands
 
 from utils.config import token
 
+import PySimpleGUI as sg
+import platform, \
+    socket, \
+    re, \
+    uuid, \
+    json, \
+    psutil, \
+    logging
+
 Intents = discord.Intents.all()
 client = discord.Client(intents=Intents)
 tree = app_commands.CommandTree(client)
@@ -30,12 +39,29 @@ def get_prefix(bot, message):
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 
+def getSystemInfo():
+    try:
+        info = {}
+        info['platform'] = platform.system()
+        info['platform-release'] = platform.release()
+        info['platform-version'] = platform.version()
+        info['architecture'] = platform.machine()
+        info['hostname'] = socket.gethostname()
+        info['processor'] = platform.processor()
+        info['ram'] = str(round(psutil.virtual_memory().total / (1024.0 ** 3))) + " GB"
+        return json.dumps(info)
+    except Exception as e:
+        logging.exception(e)
+
+
+json.loads(getSystemInfo())
+
+
 class MyBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.owner_id = 384459643545583627
         self.init_ext = [
-            'cogs.testing',
             'cogs.loading',
             'cogs.misc',
             'cogs.server'
@@ -51,6 +77,30 @@ class MyBot(commands.Bot):
         await self.tree.sync(guild=discord.Object(886621065554575410))
         await self.change_presence(status=discord.Status.online,
                                    activity=discord.Game('with code'))
+
+        sg.theme('LightGreen3')
+
+        e = json.loads(getSystemInfo())
+
+        layout = [
+            [sg.Text(f"Logged in as {self.user}")],
+            [sg.Text(f"Bot ID: {self.user.id}")],
+            [sg.Text(f"# of Guilds in: {len(self.guilds)}")],
+            [sg.Text("Initial Extensions:")],
+            [sg.Listbox(values=(self.init_ext), size=(30, 3))],
+            [sg.Text("Current issues: \n"
+                     "https://github.com/EggDevPy/cocoaPy/issues")],
+            [sg.Text("System Info:\n")],
+            [sg.Multiline(f"{e}", size=(40,40))],
+
+        ]
+        window = sg.Window('CocoaPy', layout, resizable=True, size=(300, 400))
+        while True:
+            event, values = window.read()
+            if event == sg.WINDOW_CLOSED:
+                break
+            print("GUI Exited")
+        window.close()
 
     async def setup_hook(self):
         self.session = aiohttp.ClientSession()
@@ -84,3 +134,5 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
+
+
